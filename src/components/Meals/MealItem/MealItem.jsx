@@ -28,6 +28,7 @@ const MealItem = ({id,name,description,price}) => {
   const prices =`${price.toFixed(2)}`
   const cartContext = useContext(CartContext)
   const addToCartHandler = amount => {
+  //  action object를 직접 생성
     cartContext.addItem({
       id: id,
       name: name,

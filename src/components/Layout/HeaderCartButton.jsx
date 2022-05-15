@@ -1,8 +1,8 @@
 import styled from '@emotion/styled';
-import React from 'react';
+import React,{useEffect,useState,useContext} from 'react';
 import CartIcon from '../Cart/CartIcon';
 import CartContext from '../../store/cart-context';
-import { useContext } from 'react';
+
 const Button = styled.button`
   
   cursor: pointer;
@@ -25,6 +25,27 @@ const Button = styled.button`
   height: 1.35rem;
   margin-right: 0.5rem;
   }
+
+  animation: ${(props) => props.buttonEffect ? 'bump 300ms ease-out' : 'none'};
+
+@keyframes bump {
+  0% {
+    transform: scale(1);
+  }
+  10% {
+    transform: scale(0.9);
+  }
+  30% {
+    transform: scale(1.1);
+  }
+  50% {
+    transform: scale(1.15);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
 `
 
 const Badge = styled.span`
@@ -41,35 +62,31 @@ const Badge = styled.span`
 //   background-color: #92320c;
 // }
 
-// .bump {
-//   animation: bump 300ms ease-out;
-// }
 
-// @keyframes bump {
-//   0% {
-//     transform: scale(1);
-//   }
-//   10% {
-//     transform: scale(0.9);
-//   }
-//   30% {
-//     transform: scale(1.1);
-//   }
-//   50% {
-//     transform: scale(1.15);
-//   }
-//   100% {
-//     transform: scale(1);
-//   }
-// }
 const HeaderCartButton = ({showCartHandler}) => {
+  const [buttonEffect, setButtonEffect] = useState(false);
   const cartContext = useContext(CartContext);
+  const {items} = cartContext;
+  useEffect(()=>{
+    if(items.length === 0){
+      return;
+    }
+    setButtonEffect(true);
+    const timer = setTimeout(()=>{
+      setButtonEffect(false);
+    },300)
 
-  const numberOfCartItems = cartContext.items.reduce((cur,item)=>{
+    return () => {
+      clearTimeout(timer)
+    }
+  },[items])
+
+  // reduce method는 쉽게 생각하면 데이터 베열을 값 하나로 변환해주는 메소드이다.
+  const numberOfCartItems = items.reduce((cur,item)=>{
     return cur + item.amount;
   }, 0);
   return (
-    <Button onClick={showCartHandler}>
+    <Button onClick={showCartHandler} buttonEffect={buttonEffect}>
       <span>
         <CartIcon />
       </span>

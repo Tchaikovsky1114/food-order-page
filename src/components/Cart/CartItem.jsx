@@ -77,7 +77,7 @@ const CartItem = (props) => {
         </Summary>
       </div>
       <Actions>
-        <button onClick={props.onRemove}>−</button>
+        <button onClick={()=>props.onRemove(props.id)}>−</button>
         <button onClick={props.onAdd}>+</button>
       </Actions>
     </CartItemWrapper>

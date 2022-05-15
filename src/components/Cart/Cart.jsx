@@ -52,21 +52,31 @@ const Cart = ({ showCartHandler }) => {
   const cartContext = useContext(CartContext);
 
   const totalAmount = `$${cartContext.totalAmount.toFixed(2)}`;
+  // state가 아닌 변수로 조절
   const hasItems = cartContext.items.length > 0;
 
-  const cartItemRemoveHandler = (id) => {};
+  const cartItemRemoveHandler = (id) => {
+    cartContext.removeItem(id);
+  };
 
-  const cartItemAddHandler = (item) => {};
+  const cartItemAddHandler = (item) => {
+    cartContext.addItem({...item,amount:1})
+  };
 
   const cartItems = 
     <CartItems>
-      {[cartContext.items].map((item) => (
+      {cartContext.items.map((item) => (
         <CartItem
           key={item.id}
+          id={item.id}
           name={item.name}
           amount={item.amount}
           price={item.price}
-          onRemove={cartItemRemoveHandler.bind(null, item.id)}
+          // bind를 통해 함수가 실행될 때 받을 인수를 미리 구성할 수 있다.
+          // bind의 사용이 어색하다면 , 함수가 실행될 때 Arrow function으로 묶어 인자를 전달할 수 있다.
+          // 함수 호출부에서 onClick={()=> onRemove(props.item.id)}
+          // bind의 예시를 남겨두기 위해 onAdd에서는 그대로 bind 시용.
+          onRemove={cartItemRemoveHandler}
           onAdd={cartItemAddHandler.bind(null,item)}
         />
       ))}
